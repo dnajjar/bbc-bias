@@ -13,7 +13,6 @@ def get_articles_links() -> list:
     while True: 
         try:
             WebDriverWait(driver, 15)
-            sleep(3)
             button = driver.find_element("xpath", "//button[contains(text(), 'Load more stories')]")
             button.click()    
         except Exception as e: 
@@ -21,7 +20,8 @@ def get_articles_links() -> list:
 
     elems = driver.find_elements("xpath", "//a[contains(@data-metrics, 'Click Story Title')]")    
     links = [elem.get_attribute('href') for elem in elems]
-    print(links)
+    return links
+
 
 def get_text_from_articles():
     """
@@ -30,7 +30,7 @@ def get_text_from_articles():
     with open('npr_summary.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
         writer.writerow(["link", "text"])
-        for article_link in new_links:
+        for article_link in article_links:
             html = urllib.request.urlopen(article_link)
             content = html.read()
             parsed_html = bs(content, 'lxml')
